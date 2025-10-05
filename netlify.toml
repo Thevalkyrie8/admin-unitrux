@@ -1,0 +1,40 @@
+[build]
+  publish = "dist"
+  command = "npm ci && npm run build:prod"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--production=false"
+  VITE_APP_ENV = "production"
+  VITE_API_BASE_URL = "https://unitrux-api.up.railway.app/api"
+  VITE_API_TIMEOUT = "30000"
+  VITE_BUILD_SOURCEMAP = "false"
+  VITE_BUILD_MINIFY = "true"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

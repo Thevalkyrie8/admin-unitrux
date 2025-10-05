@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  unitrux-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: unitrux-admin-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - VITE_APP_ENV=production
+      - VITE_API_BASE_URL=https://unitrux-api.up.railway.app/api
+    volumes:
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - unitrux-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add a reverse proxy if needed
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: unitrux-nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx-proxy.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - unitrux-admin
+    networks:
+      - unitrux-network
+
+networks:
+  unitrux-network:
+    driver: bridge
+
+volumes:
+  nginx-logs:
+    driver: local

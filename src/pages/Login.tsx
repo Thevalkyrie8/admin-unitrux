@@ -99,28 +99,8 @@ const Login: React.FC = () => {
             </button>
           </div>
 
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Demo credentials: unitrux@unitrux.com / unitrux@2025
-            </p>
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  const response = await fetch('https://unitrux-api.up.railway.app/api/health');
-                  const data = await response.json();
-                  console.log('Health check:', data);
-                  alert('API is working: ' + JSON.stringify(data));
-                } catch (error) {
-                  console.error('Health check failed:', error);
-                  alert('API check failed: ' + error);
-                }
-              }}
-              className="mt-2 text-xs text-blue-600 hover:text-blue-500"
-            >
-              Test API Connection
-            </button>
-          </div>
+          {/* Footer placeholder */}
+          <div className="text-center" />
         </form>
       </div>
     </div>

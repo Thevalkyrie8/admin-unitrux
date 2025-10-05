@@ -130,8 +130,7 @@ const Media: React.FC = () => {
     );
   }
 
-  // Debug: Log media data
-  console.log('Media data:', media);
+  //
 
   return (
     <div>
@@ -188,17 +187,7 @@ const Media: React.FC = () => {
         </div>
       </div>
 
-      {/* Debug Info */}
-      {media.length > 0 && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <h4 className="font-medium text-yellow-800 mb-2">Debug Info:</h4>
-          <div className="text-sm text-yellow-700">
-            <p>Total media: {media.length}</p>
-            <p>First item URL: {media[0]?.fileUrl || media[0]?.url || 'No URL'}</p>
-            <p>API Base: https://unitrux-api.up.railway.app/api</p>
-          </div>
-        </div>
-      )}
+      {/* */}
 
       {/* Media Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -207,24 +196,26 @@ const Media: React.FC = () => {
             <div className="aspect-w-16 aspect-h-9 bg-gray-200">
               {item.type === 'image' ? (
                 <img
-                  src={item.fileUrl || item.url}
+                  src={item.cloudinaryUrl || item.url || item.fileUrl || api.getFileUrl(item.id)}
                   alt={item.originalName}
                   className="w-full h-48 object-cover"
                   onError={(e) => {
-                    console.error('Image load error:', item.fileUrl, e);
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'flex';
+                    console.error('Image load error');
+                    (e.currentTarget as HTMLImageElement).style.display = 'none';
+                    const sibling = e.currentTarget.nextElementSibling as (HTMLElement | null);
+                    if (sibling) sibling.style.display = 'flex';
                   }}
                 />
               ) : item.type === 'video' ? (
                 <video
-                  src={item.fileUrl || item.url}
+                  src={item.cloudinaryUrl || item.url || item.fileUrl || api.getFileUrl(item.id)}
                   className="w-full h-48 object-cover"
                   controls
                   onError={(e) => {
-                    console.error('Video load error:', item.fileUrl, e);
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling.style.display = 'flex';
+                    console.error('Video load error');
+                    (e.currentTarget as HTMLVideoElement).style.display = 'none';
+                    const sibling = (e.currentTarget as HTMLVideoElement).nextElementSibling as (HTMLElement | null);
+                    if (sibling) sibling.style.display = 'flex';
                   }}
                 />
               ) : null}
